@@ -7,7 +7,8 @@
 	
 	require_once "interpreter/main.class.php"; //Including the interpreter of the code
 
-	$code = 'h da;'; //The code to run
+	$code = 'h;
+		say <p>Hi</p>;'; //The code to run
 
 	$interpreter = new xitram; //Creating new interpreter class
 	echo 'Syntax check output: ';

@@ -8,9 +8,9 @@ class h implements keywords{
 		return $this->error;
 	}
 
-	public function syntax($string){ //Checking the syntax, we don't want any additionall commands
+	public function syntax($string){ //Checking the syntax, we don't want any additional commands
 		if(!empty($string)){
-			 $this->error .= "The command 'h' doesn't accept any additionall commands";
+			 $this->error .= "The command 'h' doesn't accept any additional commands";
 			return false;
 		}
 		return true;
