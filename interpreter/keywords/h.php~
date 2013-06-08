@@ -10,7 +10,7 @@ class h implements keywords{
 
 	public function syntax($string){ //Checking the syntax, we don't want any additionall commands
 		if(!empty($string)){
-			 $this->error .= "The command 'h' doesn't accept any additionall commands";
+			 $error .= "The command 'h' doesn't accept any additionall commands";
 			return false;
 		}
 		return true;
