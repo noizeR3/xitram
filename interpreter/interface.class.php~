@@ -1,6 +1,0 @@
-<?php
-interface keywords{
-	public function error();
-	public function syntax($code);
-}
-?> 

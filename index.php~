@@ -1,8 +1,0 @@
-<?php
-	require_once "interpreter/main.class.php";
-
-	$code = 'h some weird test to test the damn dfunction; h;h dd ;h ;;h';
-	$class = new xitram($code);
-
-	$class->execute();
-?>
