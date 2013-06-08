@@ -1,0 +1,51 @@
+<? 
+require_once 'interface.class.php';
+
+class xitram{
+	public $error = NULL; //All errors in code are saved here
+	private $commands = array(); //All objects will be stored here
+	private $arguments = array(); //Command arguments will be stored here
+	private $lines = NULL; //Number of lines that the code has
+	
+	function __construct($code){
+		$code = explode(';', $code);
+		
+		$code_line = 0; // For bug on line reporting
+		$code_error = NULL; //All the errors will be saved here
+
+		foreach($code as $line){
+			$code_line++; //Moving to the next line
+			$line = explode(' ', trim($code[$code_line - 1]), 2); // We need just the first word on each line.
+
+			if(empty($line[1])) $line[1] = NULL; //In-case we don't have an extra argument
+			
+			if(ctype_alnum($line[0])){
+				if(file_exists(dirname(__FILE__).'/keywords/'.$line[0].'.php')){
+					require_once dirname(__FILE__).'/keywords/'.$line[0].'.php';
+					$this->commands[$code_line -1] = new $line[0]; //Creating object for the line
+					if($this->commands[$code_line -1]->syntax($line[1]) != 'true') $code_error .= $this->commands[$code_line -1]->error().'<br/>';
+					$this->arguments[$code_line -1] = $line[1]; // Adding arguments for this line
+				}
+				else $code_error .= 'Syntax error near: \''.$line[0].'\' on line: '.$code_line.' - \'Unknown command\'<br/>';			
+				
+			}
+			else {	
+				if(!empty($line[0])) $code_error .= 'Syntax error near: \''.$line[0].'\' on line: '.$code_line.' - \'Command must be alphanumeric\'<br/>';
+				else $code_line -= 1; //If there is a trailing ; remove the line     
+			     }	
+		}
+		$this->error = $code_error;
+		$this->lines = $code_line;
+	}
+
+	function syntax(){
+		if(!empty($this->error)) return "Some errors were found: <p>$this->error</p>";
+		return "No errors were found!";
+	}			
+
+	function execute(){
+		if(!empty($this->error)) die($this->error);	
+		for($temp = 0;$temp < $this->lines; $temp++) $this->commands[$temp]->run($this->arguments[$temp]);
+	}
+} 
+?>
