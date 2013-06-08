@@ -1,0 +1,15 @@
+Xitram is an experimental programming language, that aims to be as simple as possible, so even people without programming knowledge can learn it within minutes.
+Additionally, the syntax can be edited very easily by creating new PHP classes.
+
+To add a new keyword:
+=> Create a new file [your keyword].php in the folder "interpreter/keywords"
+=> Include a class: class [your keyword] implements keywords{}
+=> Define these functions in the class: 
+	public function error(){ //This function returns any errors
+	}
+
+	public function syntax($string){ //This function is called to test the syntax
+	}
+	public function run($string){ //This function will be called, when the keyword is found	
+	}
+=> View the h.php file for an example
