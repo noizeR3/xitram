@@ -6,7 +6,7 @@ class say implements keywords{
 		return $this->error;
 	}
 
-	public function syntax($string){ //Checking the syntax, we don't want any additionall commands
+	public function syntax($string){
 		if(empty($string)){
 			 $this->error .= "The command 'say' requires additional commands";
 			return false;
