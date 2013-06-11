@@ -1,17 +1,16 @@
 <?php class parser {
 	
-	public $code = array(); //The Xintram readable code will be stored here
+	public $code = array(); //The Xitram readable code will be stored here
 	
 	public function parse($raw_code){ //This translates user-written code to more understandable commands
 		/* Init */		
-		$code = array(); //The Xintram readable code will be stored here		
 		$line = 0; //On what line are we
 		$argument = 0; //On what argument are we?
 		$code_length = strlen($raw_code); //Length of the code	
 		
 		/* Special behavior */
 		$space = false; //For better formatting, we will detect if space was already used
-		$in_string = array( //Are we in string? (special behavior is needed for both cases)
+		$in_string = array( //Are we in a string? (a special behavior is needed for both cases)
 				   "\"" => false, //Inside double-quoted string
 				   "'" => false); //Inside single quoted string
 	
@@ -38,7 +37,10 @@
 					$space = false;
 				break;
 				case ";";
-					if(!$in_string["\""] && !$in_string["'"]) $line += 1;
+					if(!$in_string["\""] && !$in_string["'"]){
+						$line += 1;
+						$argument = 0;
+					}
 					else $this->builder($raw_code[$temp], $line, $argument);
 					$space = false;
 				break;
