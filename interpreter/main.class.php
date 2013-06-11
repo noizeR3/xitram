@@ -13,13 +13,13 @@ class xitram{
 	private function load($code){
 		$parser = new parser;		
 		$code = $parser->parse($code);
-		
+
 		$code_line = 0; // For bug on line reporting
 		$code_error = NULL; //All the errors will be saved here
 
 		foreach($code as $line){
 			$code_line++; //Moving to the next line
-			
+
 			if(empty($line[1])) $line[1] = NULL; //Adding null (in-case we don't have other arguments)			
 
 			if(ctype_alnum($line[0])){
@@ -33,7 +33,8 @@ class xitram{
 					if($this->keywords[$line[0]]->syntax($line[1]) != 'true'){
 						 $code_error .= 'Error near: \''.$line[0].'\' on line: '.$code_line.' - '.$this->keywords[$line[0]]->error().'<br/>';
 					}
-					$this->arguments[$code_line -1] = $line[1]; // Adding arguments for this line
+					unset($line[0]); //Unsetting the first parameter
+					$this->arguments[$code_line -1] = $line; // Adding arguments for this line
 				}
 				else $code_error .= 'Syntax error near: \''.$line[0].'\' on line: '.$code_line.' - \'Unknown command\'<br/>';			
 				
@@ -64,7 +65,8 @@ class xitram{
 	}			
 	//Executing the code
 	public function execute($code){
-		$this->load($code);
+		$this->load($code);	
+	
 		if(!empty($this->error)) die($this->error);	
 		for($temp = 0;$temp < $this->lines; $temp++) $this->keywords[$this->commands[$temp]]->run($this->arguments[$temp]);
 		$this->clean();
