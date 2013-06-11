@@ -7,6 +7,7 @@ class xitram{
 	private $commands = array(); //All objects will be stored here
 	private $arguments = array(); //Command arguments will be stored here
 	private $lines = NULL; //Number of lines that the code has
+	private $keywords = array(); //Used keywords (so we don't re-make the same object over and over again)
 	
 	//Loading the code, making sure it has no syntax errors,
 	private function load($code){
@@ -18,16 +19,19 @@ class xitram{
 
 		foreach($code as $line){
 			$code_line++; //Moving to the next line
-			//$line = explode(' ', trim($code[$code_line - 1]), 2); // We need just the first word on each line.
-
-			if(empty($line[1])) $line[1] = NULL; //In-case we don't have an extra argument
 			
+			if(empty($line[1])) $line[1] = NULL; //Adding null (in-case we don't have other arguments)			
+
 			if(ctype_alnum($line[0])){
 				if(file_exists(dirname(__FILE__).'/keywords/'.$line[0].'.php')){
-					require_once dirname(__FILE__).'/keywords/'.$line[0].'.php';
-					$this->commands[$code_line -1] = new $line[0]; //Creating object for the line
-					if($this->commands[$code_line -1]->syntax($line[1]) != 'true'){
-						 $code_error .= 'Error near: \''.$line[0].'\' on line: '.$code_line.' - '.$this->commands[$code_line -1]->error().'<br/>';
+					if(isset($this->keywords[$line[0]])) $this->commands[$code_line -1] = $line[0];
+					else {
+						require_once dirname(__FILE__).'/keywords/'.$line[0].'.php';
+						$this->keywords[$line[0]] = new $line[0]; //Creating and storing an object for the command.				
+						$this->commands[$code_line -1] = $line[0];
+					}
+					if($this->keywords[$line[0]]->syntax($line[1]) != 'true'){
+						 $code_error .= 'Error near: \''.$line[0].'\' on line: '.$code_line.' - '.$this->keywords[$line[0]]->error().'<br/>';
 					}
 					$this->arguments[$code_line -1] = $line[1]; // Adding arguments for this line
 				}
@@ -62,7 +66,7 @@ class xitram{
 	public function execute($code){
 		$this->load($code);
 		if(!empty($this->error)) die($this->error);	
-		for($temp = 0;$temp < $this->lines; $temp++) $this->commands[$temp]->run($this->arguments[$temp]);
+		for($temp = 0;$temp < $this->lines; $temp++) $this->keywords[$this->commands[$temp]]->run($this->arguments[$temp]);
 		$this->clean();
 	}
 } 
