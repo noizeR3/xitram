@@ -1,5 +1,6 @@
 <? 
 require_once 'interface.class.php';
+require_once 'parser.class.php';
 
 class xitram{
 	public $error = NULL; //All errors in code are saved here
@@ -9,14 +10,15 @@ class xitram{
 	
 	//Loading the code, making sure it has no syntax errors,
 	private function load($code){
-		$code = explode(';', $code);
+		$parser = new parser;		
+		$code = $parser->parse($code);
 		
 		$code_line = 0; // For bug on line reporting
 		$code_error = NULL; //All the errors will be saved here
 
 		foreach($code as $line){
 			$code_line++; //Moving to the next line
-			$line = explode(' ', trim($code[$code_line - 1]), 2); // We need just the first word on each line.
+			//$line = explode(' ', trim($code[$code_line - 1]), 2); // We need just the first word on each line.
 
 			if(empty($line[1])) $line[1] = NULL; //In-case we don't have an extra argument
 			
