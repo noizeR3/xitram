@@ -14,8 +14,10 @@ class writef implements keywords{
         return true;
     }
     public function run($string){
-        $string = implode($string);
-        file_put_contents $string;
+        private $arg1 = htmlentities($string[1]);
+        unset($string[1]);
+        $string = htmlentities(implode($string));
+        file_put_contents($arg1,$string);
     }
 } 
 ?>
