@@ -14,6 +14,7 @@ class say implements keywords{
 		return true;
 	}
 	public function run($string){ //We are echoing anything found after the command
+		$string = implode($string); //$string is an array, so let's form a string from it again
 		echo $string;	
 	}
 } 
